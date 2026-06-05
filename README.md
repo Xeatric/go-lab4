@@ -41,13 +41,13 @@ docker-compose up --build
     POST	/api/v1/auth/logout 	    Выход из текущей сессии	
     POST	/api/v1/auth/logout-all	    Выход из всех устройств	
 ## Tiles (Плитки)
-Метод	    Путь	                   Описание	
-GET	        /api/v1/tiles	           Получить список плиток (с пагинацией)	
-POST	    /api/v1/tiles	           Создать новую плитку	
-GET	        /api/v1/tiles/{id}         Получить плитку по ID	
-PUT	        /api/v1/tiles/{id}	       Полное обновление плитки	
-PATCH	    /api/v1/tiles/{id}	       Частичное обновление плитки	
-DELETE	    /api/v1/tiles/{id}	       Удаление плитки (soft delete)	
+      Метод	    Путь	                   Описание	
+      GET	        /api/v1/tiles	           Получить список плиток (с пагинацией)	
+      POST	    /api/v1/tiles	           Создать новую плитку	
+      GET	        /api/v1/tiles/{id}         Получить плитку по ID	
+      PUT	        /api/v1/tiles/{id}	       Полное обновление плитки	
+      PATCH	    /api/v1/tiles/{id}	       Частичное обновление плитки	
+      DELETE	    /api/v1/tiles/{id}	       Удаление плитки (soft delete)	
  
  
  ## Аутентификация
