@@ -127,7 +127,7 @@ Content-Type: application/json
 
 ## Получение списка плиток с пагинацией
 
-   Запрос:
+Запрос:
 
    http
    GET /api/v1/tiles?page=1&limit=10
