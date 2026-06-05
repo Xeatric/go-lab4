@@ -35,7 +35,7 @@ logs/
 # Swagger generated files (если есть)
 /docs/swagger.json
 /docs/swagger.yaml
-# /docs/docs.go  # закомментируйте, если хотите сохранить
+/docs/docs.go  
 
 # Binary
 paving-tiles-api
