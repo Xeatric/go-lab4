@@ -29,10 +29,7 @@ type Config struct {
 	YandexClientSecret string
 	YandexRedirectURL  string
 
-	// OAuth VK
-	VKClientID     string
-	VKClientSecret string
-	VKRedirectURL  string
+	AppEnv string // "development" или "production"
 }
 
 func Load() (*Config, error) {
@@ -58,9 +55,7 @@ func Load() (*Config, error) {
 		YandexClientSecret: getEnv("YANDEX_CLIENT_SECRET", ""),
 		YandexRedirectURL:  getEnv("YANDEX_REDIRECT_URL", ""),
 
-		VKClientID:     getEnv("VK_CLIENT_ID", ""),
-		VKClientSecret: getEnv("VK_CLIENT_SECRET", ""),
-		VKRedirectURL:  getEnv("VK_REDIRECT_URL", ""),
+		AppEnv: getEnv("APP_ENV", "development"),
 	}, nil
 }
 

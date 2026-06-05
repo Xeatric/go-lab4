@@ -1,3 +1,19 @@
+// main.go
+// @title           Paving Tiles API
+// @version         1.0
+// @description     API для управления каталогом тротуарной плитки с аутентификацией
+// @termsOfService  http://swagger.io/terms/
+// @contact.name    API Support
+// @contact.email   support@paving-tiles.com
+// @license.name    MIT
+// @license.url     https://opensource.org/licenses/MIT
+// @host            localhost:4200
+// @BasePath        /api/v1
+// @securityDefinitions.apikey BearerAuth
+// @in              header
+// @name            Authorization
+// @description     Введите "Bearer {ваш JWT токен}" для авторизации
+
 package main
 
 import (
@@ -15,6 +31,11 @@ import (
 	"paving-tiles-api/internal/service"
 
 	"github.com/gin-gonic/gin"
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
+
+	// Документация будет сгенерирована в ./docs
+	_ "paving-tiles-api/docs"
 )
 
 func main() {
@@ -61,6 +82,12 @@ func main() {
 	router.GET("/health", func(c *gin.Context) {
 		c.JSON(200, gin.H{"status": "ok"})
 	})
+
+	if cfg.AppEnv == "development" {
+		// Генерируем OpenAPI спецификацию или используем сгенерированные файлы
+		router.GET("/api/docs/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+		log.Println("📚 Swagger documentation enabled at /api/docs/index.html")
+	}
 
 	// Auth маршруты (публичные)
 	auth := router.Group("/auth")

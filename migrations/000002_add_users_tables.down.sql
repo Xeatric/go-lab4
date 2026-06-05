@@ -3,6 +3,7 @@ DROP TRIGGER IF EXISTS update_users_updated_at ON users;
 DROP FUNCTION IF EXISTS update_updated_at_column();
 
 DROP INDEX IF EXISTS idx_tiles_user_id;
+DROP INDEX IF EXISTS idx_users_email;
 ALTER TABLE tiles DROP COLUMN IF EXISTS user_id;
 
 DROP TABLE IF EXISTS tokens;

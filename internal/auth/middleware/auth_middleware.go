@@ -19,7 +19,11 @@ func NewAuthMiddleware(authService *service.AuthService) *AuthMiddleware {
 	}
 }
 
-// Authenticate - проверка аутентификации через cookies
+// Authenticate godoc
+// @Summary      Проверка аутентификации
+// @Description  Проверяет JWT токен в Authorization header или cookie
+// @Tags         Middleware
+// @Security     BearerAuth
 func (m *AuthMiddleware) Authenticate() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var token string
@@ -62,7 +66,11 @@ func (m *AuthMiddleware) Authenticate() gin.HandlerFunc {
 	}
 }
 
-// RequireRole - проверка роли
+// RequireRole godoc
+// @Summary      Проверка роли пользователя
+// @Description  Проверяет, имеет ли пользователь необходимую роль
+// @Tags         Middleware
+// @Param        roles path []string true "Необходимые роли"
 func (m *AuthMiddleware) RequireRole(roles ...string) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		userRole, exists := c.Get("user_role")

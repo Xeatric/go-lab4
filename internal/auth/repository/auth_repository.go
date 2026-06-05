@@ -49,15 +49,6 @@ func (r *AuthRepository) FindUserByYandexID(yandexID string) (*models.User, erro
 	return &user, nil
 }
 
-func (r *AuthRepository) FindUserByVkID(vkID string) (*models.User, error) {
-	var user models.User
-	err := r.db.Where("vk_id = ? AND deleted_at IS NULL", vkID).First(&user).Error
-	if err != nil {
-		return nil, err
-	}
-	return &user, nil
-}
-
 func (r *AuthRepository) UpdateUser(user *models.User) error {
 	return r.db.Save(user).Error
 }

@@ -1,12 +1,13 @@
 services:
   postgres:
     image: postgres:16-alpine
-    container_name: paving_tiles_postgres_lab3
+    container_name: paving_tiles_postgres_lab4
     restart: unless-stopped
     environment:
       POSTGRES_USER: student
       POSTGRES_PASSWORD: student_secure_password
       POSTGRES_DB: paving_tiles_db
+      APP_ENV: development
     ports:
       - "5432:5432"
     volumes:
@@ -22,7 +23,7 @@ services:
 
   app:
     build: .
-    container_name: paving_tiles_app_lab3
+    container_name: paving_tiles_app_lab4
     restart: unless-stopped
     environment:
       DB_HOST: postgres
@@ -31,11 +32,15 @@ services:
       DB_PASSWORD: student_secure_password
       DB_NAME: paving_tiles_db
       PORT: 4200
+      
       # JWT настройки
       JWT_ACCESS_SECRET: test_access_secret_32_chars_long!!!
       JWT_REFRESH_SECRET: test_refresh_secret_32_chars_long!!
       JWT_ACCESS_EXPIRATION: 15m
       JWT_REFRESH_EXPIRATION: 168h
+      YANDEX_CLIENT_ID: ${YANDEX_CLIENT_ID}  
+      YANDEX_CLIENT_SECRET: ${YANDEX_CLIENT_SECRET}
+      YANDEX_REDIRECT_URL: ${YANDEX_REDIRECT_URL}
     ports:
       - "4200:4200"
     depends_on:

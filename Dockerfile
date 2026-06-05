@@ -14,12 +14,14 @@ RUN go mod download
 COPY . .
 
 # Сборка приложения
-RUN CGO_ENABLED=0 GOOS=linux go build -ldflags="-w -s" -o main ./cmd/main.go
+RUN CGO_ENABLED=0 GOOS=linux go build -ldflags="-w -s" -o main ./main.go
 
 # Финальный этап
 FROM alpine:latest
 
 RUN apk --no-cache add ca-certificates
+
+WORKDIR /root/
 
 # Создание непривилегированного пользователя
 RUN addgroup -g 1000 appuser && \
@@ -29,6 +31,7 @@ WORKDIR /app
 
 # Копируем бинарный файл
 COPY --from=builder /app/main .
+COPY --from=builder /app/docs ./docs
 
 # Устанавливаем владельца
 RUN chown -R appuser:appuser /app

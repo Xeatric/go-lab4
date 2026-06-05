@@ -34,7 +34,17 @@ func NewAuthController(authService *service.AuthService, cfg *config.Config) *Au
 	}
 }
 
-// Register - регистрация нового пользователя
+// Register godoc
+// @Summary      Регистрация нового пользователя
+// @Description  Создает нового пользователя с указанными email, паролем и именем
+// @Tags         Auth
+// @Accept       json
+// @Produce      json
+// @Param        request body dto.RegisterRequest true "Данные для регистрации"
+// @Success      201 {object} map[string]interface{} "Успешная регистрация, токены в cookies"
+// @Failure      400 {object} map[string]interface{} "Ошибка валидации или пользователь уже существует"
+// @Router       /auth/register [post]
+
 func (c *AuthController) Register(ctx *gin.Context) {
 	var req dto.RegisterRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {
@@ -61,7 +71,18 @@ func (c *AuthController) Register(ctx *gin.Context) {
 	})
 }
 
-// Login - вход пользователя
+// Login godoc
+// @Summary      Аутентификация пользователя
+// @Description  Вход в систему с получением JWT токенов в HttpOnly cookies
+// @Tags         Auth
+// @Accept       json
+// @Produce      json
+// @Param        request body dto.LoginRequest true "Учетные данные"
+// @Success      200 {object} map[string]interface{} "Успешный вход, токены в cookies"
+// @Failure      400 {object} map[string]interface{} "Ошибка валидации"
+// @Failure      401 {object} map[string]interface{} "Неверный email или пароль"
+// @Router       /auth/login [post]
+
 func (c *AuthController) Login(ctx *gin.Context) {
 	var req dto.LoginRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {
@@ -88,7 +109,18 @@ func (c *AuthController) Login(ctx *gin.Context) {
 	})
 }
 
-// Refresh - обновление токенов
+// Refresh godoc
+// @Summary      Обновление токенов
+// @Description  Использует refresh token из cookie или тела запроса для выдачи новой пары токенов
+// @Tags         Auth
+// @Accept       json
+// @Produce      json
+// @Param        request body dto.RefreshRequest false "Refresh токен (опционально, если передан в cookie)"
+// @Success      200 {object} map[string]interface{} "Новые токены установлены в cookies"
+// @Failure      400 {object} map[string]interface{} "Отсутствует refresh token"
+// @Failure      401 {object} map[string]interface{} "Невалидный или истекший refresh token"
+// @Router       /auth/refresh [post]
+
 func (c *AuthController) Refresh(ctx *gin.Context) {
 	// Пробуем получить refresh token из cookie или из JSON
 	var refreshToken string
@@ -129,7 +161,16 @@ func (c *AuthController) Refresh(ctx *gin.Context) {
 	})
 }
 
-// Logout - выход из текущей сессии
+// Logout godoc
+// @Summary      Выход из текущей сессии
+// @Description  Отзывает refresh token текущей сессии и очищает cookies
+// @Tags         Auth
+// @Security     BearerAuth
+// @Produce      json
+// @Success      200 {object} map[string]interface{} "Успешный выход"
+// @Failure      400 {object} map[string]interface{} "Нет активной сессии"
+// @Router       /auth/logout [post]
+
 func (c *AuthController) Logout(ctx *gin.Context) {
 	// Получаем refresh token из cookie
 	refreshToken, err := ctx.Cookie("refresh_token")
@@ -150,7 +191,15 @@ func (c *AuthController) Logout(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, gin.H{"message": "successfully logged out"})
 }
 
-// LogoutAll - выход из всех устройств
+// LogoutAll godoc
+// @Summary      Выход из всех устройств
+// @Description  Отзывает все refresh токены пользователя
+// @Tags         Auth
+// @Security     BearerAuth
+// @Produce      json
+// @Success      200 {object} map[string]interface{} "Успешный выход со всех устройств"
+// @Failure      401 {object} map[string]interface{} "Не авторизован"
+// @Router       /auth/logout-all [post]
 func (c *AuthController) LogoutAll(ctx *gin.Context) {
 	userID := middleware.GetCurrentUserID(ctx)
 	if userID == 0 {
@@ -170,7 +219,16 @@ func (c *AuthController) LogoutAll(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, gin.H{"message": "successfully logged out from all devices"})
 }
 
-// Whoami - получение информации о текущем пользователе
+// Whoami godoc
+// @Summary      Информация о текущем пользователе
+// @Description  Возвращает данные аутентифицированного пользователя
+// @Tags         Auth
+// @Security     BearerAuth
+// @Produce      json
+// @Success      200 {object} dto.WhoamiResponse
+// @Failure      401 {object} map[string]interface{} "Не авторизован"
+// @Router       /auth/whoami [get]
+
 func (c *AuthController) Whoami(ctx *gin.Context) {
 	userID := middleware.GetCurrentUserID(ctx)
 	if userID == 0 {
@@ -190,7 +248,15 @@ func (c *AuthController) Whoami(ctx *gin.Context) {
 	})
 }
 
-// OAuthLogin - инициация OAuth входа (только ОДИН РАЗ!)
+// OAuthLogin godoc
+// @Summary      Инициирует OAuth2 вход через Yandex
+// @Description  Редиректит пользователя на страницу авторизации Яндекса
+// @Tags         Auth
+// @Param        provider path string true "Провайдер OAuth (yandex)"
+// @Success      302
+// @Failure      400 {object} map[string]interface{} "Неподдерживаемый провайдер"
+// @Router       /auth/oauth/{provider} [get]
+
 func (c *AuthController) OAuthLogin(ctx *gin.Context) {
 	provider := ctx.Param("provider")
 	if provider != "yandex" {
@@ -226,7 +292,18 @@ func (c *AuthController) OAuthLogin(ctx *gin.Context) {
 	ctx.Redirect(http.StatusTemporaryRedirect, authURL)
 }
 
-// OAuthCallback - обработка callback
+// OAuthCallback godoc
+// @Summary      Callback OAuth2 от Яндекса
+// @Description  Обрабатывает ответ от Яндекса, создает/находит пользователя и выдает токены
+// @Tags         Auth
+// @Param        provider path string true "Провайдер OAuth (yandex)"
+// @Param        code query string true "Временный код от Яндекса"
+// @Param        state query string true "CSRF protection state"
+// @Success      200 {object} map[string]interface{} "Успешная аутентификация, токены в cookies"
+// @Failure      400 {object} map[string]interface{} "Неверный state параметр"
+// @Failure      500 {object} map[string]interface{} "Ошибка обмена кода или получения данных"
+// @Router       /auth/oauth/{provider}/callback [get]
+
 func (c *AuthController) OAuthCallback(ctx *gin.Context) {
 	provider := ctx.Param("provider")
 	if provider != "yandex" {
