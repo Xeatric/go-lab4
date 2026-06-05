@@ -51,11 +51,11 @@ docker-compose up --build
  
  
  ## Аутентификация
-API использует JWT токены для аутентификации. Токены хранятся в HttpOnly cookies после успешного входа.
+   API использует JWT токены для аутентификации. Токены хранятся в HttpOnly cookies после успешного входа.
 
  ## Получение токена
-Выполните запрос POST /auth/login с вашими учетными данными
-Токены автоматически устанавливаются в cookies
+   Выполните запрос POST /auth/login с вашими учетными данными
+   Токены автоматически устанавливаются в cookies
 
 ## Регистрация пользователя
 Запрос:
@@ -127,12 +127,12 @@ Content-Type: application/json
 
 ## Получение списка плиток с пагинацией
 
-Запрос:
+   Запрос:
 
-http
-GET /api/v1/tiles?page=1&limit=10
-Authorization: Bearer your_token
-Ответ (200 OK):
+   http
+   GET /api/v1/tiles?page=1&limit=10
+   Authorization: Bearer your_token
+   Ответ (200 OK):
 
 ```json
 {
